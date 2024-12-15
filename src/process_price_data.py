@@ -26,7 +26,7 @@ class process_price_data:
         self.log_rt_df = np.log(self.price_df).diff()
 
         # 欠損値処理
-        self.log_rt_df.dropna(inplace=True)
+        self.log_rt_df.dropna(how="all", inplace=True)
 
         # 列名を変更する（一時的処理）
         new_col_name_list = [
@@ -41,6 +41,8 @@ class process_price_data:
         self.log_rt_df = self.log_rt_df.loc[
             :, self.log_rt_df.columns.isin(self.Market_cap_df["Name"])
         ]
+        # 名前順にソートする
+        self.log_rt_df.sort_index(axis=1, inplace=True)
 
         # 逆に、ユニバースに存在する銘柄のみ時価総額データを抽出する
         self.Market_cap_df = self.Market_cap_df[
@@ -119,8 +121,22 @@ class process_price_data:
         final_df = pd.concat([above_threshold, others_row], ignore_index=True)
         return final_df
 
+    def calc_market_weight(self):
+        self.Market_cap_df["weight"] = (
+            self.Market_cap_df["Market Cap (JPY)"]
+            / self.Market_cap_df["Market Cap (JPY)"].sum()
+        )
+        self.market_weight_df = self.Market_cap_df[["Name", "weight"]]
+
     def export_data(self):
+        # 共分散行列
         self.cov_mat_df.to_csv("./data/intermediate/cov_mat.csv")
+        # マーケットウエイト
+        self.market_weight_df.sort_values(by="Name").reset_index(drop=True).to_csv(
+            "./data/intermediate/market_weight.csv"
+        )
+        # 対数収益率
+        self.log_rt_df.to_csv("./data/intermediate/log_return.csv")
 
 
 if __name__ == "__main__":
@@ -129,7 +145,8 @@ if __name__ == "__main__":
     ins.cleansing_data()
     ins.filter_price_data()
     ins.calculate_statistics()
+    ins.calc_market_weight()
     ins.export_figs()
     ins.export_data()
-    print(ins.cov_mat_df)
-    print(ins.Market_cap_df)
+
+    print(ins.log_rt_df)
