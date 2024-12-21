@@ -92,6 +92,37 @@ class black_litterman:
         self.posterior_weight_df["weight"] = self.posterior_weight_array
         self.posterior_weight_df.to_csv("./data/output/result_weight.csv")
 
+    def compare_weight(self):
+        """
+        ビューによる更新を行う前の重みと後の重みを比較する
+        """
+        # 重みのDataFrameを結合する
+        merged_df = pd.merge(
+            self.market_weight_df.rename({"weight": "old"}, axis=1),
+            self.posterior_weight_df.rename({"weight": "new"}, axis=1),
+            on="Name",
+        )
+        merged_df.set_index("Name", inplace=True)
+
+        # %表示に直す
+        merged_df *= 100
+
+        # プロット
+        ax = merged_df.plot(kind="bar", figsize=(8, 5), color=["blue", "red"])
+
+        # タイトルとY軸ラベルを追加
+        ax.set_title("Compare the weight", fontsize=14)
+        ax.set_ylabel("weight (%)", fontsize=12)
+
+        # データラベルを追加
+        for container in ax.containers:
+            ax.bar_label(container, fmt="%.1f%%", label_type="edge")
+
+        # グラフの表示
+        plt.tight_layout()
+        # plt.show()
+        plt.savefig("./data/figs/compare_weight.png")
+
 
 if __name__ == "__main__":
     ins = black_litterman()
@@ -99,3 +130,4 @@ if __name__ == "__main__":
     ins.calculate_implied_return()
     ins.update_by_view()
     ins.output_result()
+    ins.compare_weight()
