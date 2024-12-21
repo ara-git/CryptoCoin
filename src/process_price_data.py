@@ -10,9 +10,9 @@ class process_price_data:
 
     def read_data(self):
         # 価格データ
-        self.price_df = pd.read_csv("./data/intermediate/price_data.csv", index_col=0)
+        self.price_df = pd.read_csv("./data/input/price_data.csv", index_col=0)
         # 時価総額データ
-        self.Market_cap_df = pd.read_csv("./data/intermediate/Market_Cap_ranking.csv")
+        self.Market_cap_df = pd.read_csv("./data/input/Market_Cap_ranking.csv")
 
     def cleansing_data(self):
         """
@@ -148,5 +148,3 @@ if __name__ == "__main__":
     ins.calc_market_weight()
     ins.export_figs()
     ins.export_data()
-
-    print(ins.log_rt_df)

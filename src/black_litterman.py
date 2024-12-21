@@ -3,11 +3,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-
-
 class black_litterman:
     def __init__(self, delta=2.5, tau=0.1625):
         self.delta = delta
@@ -29,10 +24,10 @@ class black_litterman:
         self.Sigma_array = np.array(self.Sigma_df)
 
         # 投資家のビューを読み込む
-        self.view_P_df = pd.read_csv("./data/intermediate/P_mat.csv", index_col=0)
+        self.view_P_df = pd.read_csv("./data/input/P_mat.csv", index_col=0)
         self.view_P_array = np.array(self.view_P_df)
 
-        self.view_Q_df = pd.read_csv("./data/intermediate/Q_mat.csv", index_col=0)
+        self.view_Q_df = pd.read_csv("./data/input/Q_mat.csv", index_col=0)
         self.view_Q_array = np.array(self.view_Q_df).reshape([-1, 1])
 
     def calculate_implied_return(self):
