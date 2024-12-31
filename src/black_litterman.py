@@ -79,7 +79,7 @@ class black_litterman:
 
         # 事後ウェイトを求める
         self.posterior_weight_array = (
-            np.linalg.inv(self.delta * self.posterior_Sigma) @ self.posterior_return
+            np.linalg.inv(self.delta * self.Sigma_array) @ self.posterior_return
         )
         self.posterior_weight_array /= sum(self.posterior_weight_array)
 
@@ -98,8 +98,8 @@ class black_litterman:
         """
         # 重みのDataFrameを結合する
         merged_df = pd.merge(
-            self.market_weight_df.rename({"weight": "old"}, axis=1),
-            self.posterior_weight_df.rename({"weight": "new"}, axis=1),
+            self.market_weight_df.rename({"weight": "original"}, axis=1),
+            self.posterior_weight_df.rename({"weight": "updated"}, axis=1),
             on="Name",
         )
         merged_df.set_index("Name", inplace=True)
@@ -112,7 +112,8 @@ class black_litterman:
 
         # タイトルとY軸ラベルを追加
         ax.set_title("Compare the weight", fontsize=14)
-        ax.set_ylabel("weight (%)", fontsize=12)
+        ax.set_ylabel("weight", fontsize=12)
+        ax.set_xlabel("", fontsize=12)
 
         # データラベルを追加
         for container in ax.containers:
