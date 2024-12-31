@@ -1,6 +1,7 @@
 # Diversify the Crypto Coin Portfolio using Black-Litterman
 - Description
-    Apply Black-litterman model to crypto assets portfolio and confirm the weight refer to original market weight.
+    Applying Black-litterman model to a crypto asset portfolio and comparing the resulting weights to the original market weights.
+    Detail explanation in Japanese: 
 
 - References:
     - Mednis(2022). Portfolio optimization with crypto assets.https://umu.diva-portal.org/smash/get/diva2:1672778/FULLTEXT01.pdf
